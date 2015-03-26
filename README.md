@@ -1,7 +1,13 @@
 # Dependencies
+## Backend
 -  sqlite3
 -  python
 -  flask
+
+## Frontend
+
+-  Bootstrap 
+-  jQuery
 
 # Setup
 Ensure that the dependencies are installed
