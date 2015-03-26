@@ -57,29 +57,24 @@ def add_entry():
     return jsonify(percentile)
 
 def calculate_percentile(bmi):
-    # order the dataset in desc order by bmi
-    # use formula - 100*((i - 0.5)/n)
-    # i = the entry number
-    # n = total observations
+    # using the forumula:
+    # ((B + 0.5 * E)/n ) * 100
+    # B = number of bmi's below 'x'
+    # E = number of bmi's equal to 'x'
+    # n = number of scores
     
-    # get all the bmi values from table and order by decending
-    query = 'select bmi from entries order by bmi desc'
+    Bquery = 'select count(*) from entries where bmi < ' + str(bmi)
+    Equery = 'select count(*) from entries where bmi = ' + str(bmi)
 
     # get count of the number of values
     countQuery = 'select count(*) from entries'
-    cur = g.db.execute(countQuery)
-    count = cur.fetchone()[0]
-    cur = g.db.execute(query)
+    count = g.db.execute(countQuery).fetchone()[0]
+    B = g.db.execute(Bquery).fetchone()[0]
+    E = g.db.execute(Equery).fetchone()[0]
+    percentile = float(((B + 0.5*E)/ count)*100)
+    displayDict = { 'bmi': '%.2f' % bmi, 'percentile': '%.2f' % percentile }
+    return displayDict
 
-    # create a list of dicts with the necessary information
-    items = [dict(bmi=row[0], index=i+1) for i, row in enumerate(cur.fetchall())]
-
-    # calculate the percentile for all the values
-    for item in items:
-        item['percentile'] = 100*((item['index'] - 0.5)/count)
-
-    # return the dict for which bmi value matches the input value
-    return (item for item in items if item['bmi'] == bmi).next()
 
 
 if __name__ == '__main__':
