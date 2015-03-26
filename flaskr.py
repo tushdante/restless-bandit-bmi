@@ -24,7 +24,7 @@ def connect_db():
 def before_request():
     g.db = connect_db()
 
-# remove db data from g after each request
+# close db connection after each request
 @app.teardown_request
 def teardown_request(exception):
     db = getattr(g, 'db', None)
@@ -63,16 +63,22 @@ def calculate_percentile(bmi):
     # E = number of bmi's equal to 'x'
     # n = number of scores
     
+    # query to retrive the value B mentioned above
     Bquery = 'select count(*) from entries where bmi < ' + str(bmi)
+
+    # query to retrive the value E mentioned above
     Equery = 'select count(*) from entries where bmi = ' + str(bmi)
 
     # get count of the number of values
     countQuery = 'select count(*) from entries'
+
     count = g.db.execute(countQuery).fetchone()[0]
     B = g.db.execute(Bquery).fetchone()[0]
     E = g.db.execute(Equery).fetchone()[0]
+
     percentile = float(((B + 0.5*E)/ count)*100)
     displayDict = { 'bmi': '%.2f' % bmi, 'percentile': '%.2f' % percentile }
+    
     return displayDict
 
 
