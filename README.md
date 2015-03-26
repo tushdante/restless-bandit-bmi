@@ -30,3 +30,9 @@ The basic design is as follows:
 - There are two templates being used, the ```layout.html``` which contains the basic layout to be imported to all the other views and the ```show_entries.html``` which is the main page. These are both found in the ```templates/``` directory
 - All static content to be served is in the ```static/``` directory
 - The ```formsubmit.js``` houses the javascript code to perform the ajax queries and display the response on the page
+
+# References
+
+Used the following page to figure out how to get the percentile value (Definition 1)
+
+http://www.regentsprep.org/regents/math/algebra/AD6/quartiles.htm
